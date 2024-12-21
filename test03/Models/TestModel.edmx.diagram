@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e161e3273ec546e396f1b18888632151" Name="Diagram1">
+        <EntityTypeShape EntityType="test01Model.Customers" Width="1.5" PointX="0.75" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="test01Model.MenuItems" Width="1.5" PointX="5.25" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="test01Model.OrderDetails" Width="1.5" PointX="7.5" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="test01Model.Orders" Width="1.5" PointX="5.25" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="test01Model.Payments" Width="1.5" PointX="7.5" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="test01Model.Reservations" Width="1.5" PointX="3" PointY="2.25" IsExpanded="true" />
+        <AssociationConnector Association="test01Model.FK__Reservati__Custo__4D94879B" ManuallyRouted="false" />
+        <AssociationConnector Association="test01Model.FK__OrderDeta__MenuI__5AEE82B9" ManuallyRouted="false" />
+        <AssociationConnector Association="test01Model.FK__OrderDeta__Order__59FA5E80" ManuallyRouted="false" />
+        <AssociationConnector Association="test01Model.FK__Orders__Reservat__5535A963" ManuallyRouted="false" />
+        <AssociationConnector Association="test01Model.FK__Payments__OrderI__5DCAEF64" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
