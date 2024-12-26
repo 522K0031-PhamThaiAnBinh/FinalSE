@@ -39,9 +39,11 @@ namespace test03.Controllers
         // GET: Payments/Create
         public ActionResult Create()
         {
-            ViewBag.OrderID = new SelectList(db.Orders, "OrderID", "Status");
+            // Use OrderID as both the value and display text
+            ViewBag.OrderID = new SelectList(db.Orders, "OrderID", "OrderID");
             return View();
         }
+
 
         // POST: Payments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 

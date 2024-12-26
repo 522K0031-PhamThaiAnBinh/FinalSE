@@ -39,9 +39,11 @@ namespace test03.Controllers
         // GET: Orders/Create
         public ActionResult Create()
         {
-            ViewBag.ReservationID = new SelectList(db.Reservations, "ReservationID", "Status");
+            // Use ReservationID as both value and display text in the dropdown
+            ViewBag.ReservationID = new SelectList(db.Reservations, "ReservationID", "ReservationID");
             return View();
         }
+
 
         // POST: Orders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 

@@ -48,18 +48,22 @@ namespace test03.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ReservationID,CustomerID,ReservationDate,ReservationTime,NumberOfGuests,TableNumber,Status,SpecialInstructions,CreatedAt")] Reservations reservations)
+        public ActionResult Create([Bind(Include = "CustomerID,ReservationDate,ReservationTime,NumberOfGuests,TableNumber,Status,SpecialInstructions")] Reservations reservation)
         {
             if (ModelState.IsValid)
             {
-                db.Reservations.Add(reservations);
+                // Set the CreatedAt field to the current date and time
+                reservation.CreatedAt = DateTime.Now;
+
+                db.Reservations.Add(reservation);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FirstName", reservations.CustomerID);
-            return View(reservations);
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FullName", reservation.CustomerID);
+            return View(reservation);
         }
+
 
         // GET: Reservations/Edit/5
         public ActionResult Edit(int? id)

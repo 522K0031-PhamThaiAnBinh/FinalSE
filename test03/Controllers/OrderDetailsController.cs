@@ -39,10 +39,13 @@ namespace test03.Controllers
         // GET: OrderDetails/Create
         public ActionResult Create()
         {
+            // Populate the dropdown for OrderID with "Order #OrderID"
+            ViewBag.OrderID = new SelectList(db.Orders, "OrderID", "OrderID");  // Show OrderID as text
             ViewBag.MenuItemID = new SelectList(db.MenuItems, "MenuItemID", "Name");
-            ViewBag.OrderID = new SelectList(db.Orders, "OrderID", "Status");
+
             return View();
         }
+
 
         // POST: OrderDetails/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
