@@ -156,11 +156,30 @@ namespace test03.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            // Find the menu item to be deleted
             MenuItems menuItems = db.MenuItems.Find(id);
+
+            if (menuItems == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Delete related OrderDetails that reference this MenuItem
+            var relatedOrderDetails = db.OrderDetails
+                                        .Where(od => od.MenuItemID == menuItems.MenuItemID)
+                                        .ToList();
+            db.OrderDetails.RemoveRange(relatedOrderDetails);
+
+            // Now delete the MenuItem itself
             db.MenuItems.Remove(menuItems);
+
+            // Save changes to the database
             db.SaveChanges();
+
+            // Redirect to the Index view
             return RedirectToAction("Index");
         }
+
 
         protected override void Dispose(bool disposing)
         {
