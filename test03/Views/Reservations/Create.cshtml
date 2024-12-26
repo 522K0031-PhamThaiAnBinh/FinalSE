@@ -12,6 +12,13 @@
                     <h3>Create a Reservation</h3>
                 </div>
                 <div class="card-body">
+                    @if (TempData["Message"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["Message"]
+                        </div>
+                    }
+
                     @using (Html.BeginForm())
                     {
                         @Html.AntiForgeryToken()
@@ -28,7 +35,6 @@
                             @Html.EditorFor(model => model.ReservationDate, new { htmlAttributes = new { @class = "form-control", type = "date", min = DateTime.Today.ToString("yyyy-MM-dd") } })
                             @Html.ValidationMessageFor(model => model.ReservationDate, "", new { @class = "text-danger" })
                         </div>
-
 
                         <!-- Reservation Time -->
                         <div class="form-group">

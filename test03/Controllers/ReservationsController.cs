@@ -43,7 +43,6 @@ namespace test03.Controllers
             return View();
         }
 
-        // POST: Reservations/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CustomerID,ReservationDate,ReservationTime,NumberOfGuests,TableNumber,Status,SpecialInstructions")] Reservations reservation)
@@ -60,13 +59,15 @@ namespace test03.Controllers
 
                 // Check for existing reservations at the same date, time, and table
                 var existingReservation = db.Reservations
-                    .FirstOrDefault(r => r.ReservationDate == reservation.ReservationDate && r.ReservationTime == reservation.ReservationTime && r.TableNumber == reservation.TableNumber);
+                    .FirstOrDefault(r => r.ReservationDate == reservation.ReservationDate &&
+                                         r.ReservationTime == reservation.ReservationTime &&
+                                         r.TableNumber == reservation.TableNumber);
 
                 if (existingReservation != null)
                 {
-                    ModelState.AddModelError("TableNumber", "This table is already reserved at the selected time.");
-                    ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FullName", reservation.CustomerID);
-                    return View(reservation);
+                    // Show message indicating unavailability
+                    TempData["Message"] = "This table is already reserved at the selected time. Please choose another time.";
+                    return RedirectToAction("Create"); // Redirect to the create page to show the message
                 }
 
                 // Set the CreatedAt field to the current date and time
@@ -80,6 +81,7 @@ namespace test03.Controllers
             ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FullName", reservation.CustomerID);
             return View(reservation);
         }
+
 
 
 

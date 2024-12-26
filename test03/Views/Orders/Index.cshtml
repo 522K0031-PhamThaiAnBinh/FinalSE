@@ -1,51 +1,33 @@
 ﻿@model IEnumerable<test03.Models.Orders>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Orders List";
 }
 
-<h2>Index</h2>
-
+<h2>Orders List</h2>
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.TotalAmount)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OrderDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Status)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Reservations.Status)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.TotalAmount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OrderDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Reservations.Status)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.OrderID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.OrderID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.OrderID })
-        </td>
-    </tr>
-}
-
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.OrderID)</th>
+            <th>@Html.DisplayNameFor(model => model.ReservationID)</th>
+            <th>@Html.DisplayNameFor(model => model.TotalAmount)</th>
+            <th>@Html.DisplayNameFor(model => model.OrderDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Status)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.OrderID</td> <!-- Display OrderID -->
+                <td>@order.ReservationID</td>
+                <td>@order.TotalAmount</td>
+                <td>@order.OrderDate</td>
+                <td>@order.Status</td>
+            </tr>
+        }
+    </tbody>
 </table>

@@ -19,9 +19,11 @@ namespace test03.Controllers
         // GET: Orders
         public ActionResult Index()
         {
-            var orders = db.Orders.Include(o => o.Reservations);
-            return View(orders.ToList());
+            // Retrieve orders from the database, including Reservation data
+            var orders = db.Orders.Include(o => o.Reservations).ToList();
+            return View(orders);
         }
+
 
         // GET: Orders/Create
         public ActionResult Create()
@@ -45,8 +47,21 @@ namespace test03.Controllers
                 // Set OrderDate to current date and time
                 orders.OrderDate = DateTime.Now;
 
+                // Ensure only available items are included in the order
+                var unavailableItems = selectedMenuItems.Where(item =>
+                    !db.MenuItems.Any(m => m.MenuItemID == item.MenuItemID && m.IsAvailable.HasValue && m.IsAvailable.Value == true)).ToList();
+
+                if (unavailableItems.Any())
+                {
+                    // If there are unavailable items, display an error message
+                    TempData["ErrorMessage"] = "Some of the items you selected are currently unavailable.";
+                    return RedirectToAction("Create");  // Redirect back to the Create view
+                }
+
                 // Calculate TotalAmount by adding up the total of selected items
-                orders.TotalAmount = selectedMenuItems.Sum(item => item.Quantity * db.MenuItems.Where(m => m.MenuItemID == item.MenuItemID).FirstOrDefault().Price);
+                orders.TotalAmount = selectedMenuItems.Sum(item => item.Quantity * db.MenuItems
+                    .Where(m => m.MenuItemID == item.MenuItemID)
+                    .FirstOrDefault().Price);
 
                 // Add order to the database
                 db.Orders.Add(orders);
@@ -64,10 +79,13 @@ namespace test03.Controllers
                 return RedirectToAction("Index");
             }
 
+            // If the model is invalid, or after redirecting back due to unavailable items, reload dropdowns
             ViewBag.ReservationID = new SelectList(db.Reservations, "ReservationID", "Status", orders.ReservationID);
             ViewBag.MenuItems = new SelectList(db.MenuItems, "MenuItemID", "Name");
 
             return View(orders);
         }
+
+
     }
 }
