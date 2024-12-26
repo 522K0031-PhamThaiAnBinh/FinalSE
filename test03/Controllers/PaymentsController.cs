@@ -54,14 +54,18 @@ namespace test03.Controllers
         {
             if (ModelState.IsValid)
             {
+                // The Amount is now updated by JavaScript before submitting the form
+                payments.PaymentDate = DateTime.Now; // You can set the payment date here, if needed.
                 db.Payments.Add(payments);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
+            // If validation fails, repopulate the OrderID dropdown and return the view
             ViewBag.OrderID = new SelectList(db.Orders, "OrderID", "Status", payments.OrderID);
             return View(payments);
         }
+
 
         // GET: Payments/Edit/5
         public ActionResult Edit(int? id)
@@ -109,6 +113,24 @@ namespace test03.Controllers
                 return HttpNotFound();
             }
             return View(payments);
+        }
+        public JsonResult GetOrderTotal(int orderId)
+        {
+            var order = db.Orders
+                          .Where(o => o.OrderID == orderId)
+                          .FirstOrDefault();
+
+            if (order != null)
+            {
+                // Calculate the total amount based on order details
+                var totalAmount = db.OrderDetails
+                                    .Where(od => od.OrderID == orderId)
+                                    .Sum(od => od.SubTotal); // or adjust as needed based on your logic
+
+                return Json(new { totalAmount = totalAmount }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { totalAmount = 0 }, JsonRequestBehavior.AllowGet);
         }
 
         // POST: Payments/Delete/5

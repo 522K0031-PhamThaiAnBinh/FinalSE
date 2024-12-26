@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Linq;
+using System.Linq;  // Add this using statement
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -18,7 +18,7 @@ namespace test03.Controllers
         public ActionResult Index()
         {
             var orderDetails = db.OrderDetails.Include(o => o.MenuItems).Include(o => o.Orders);
-            return View(orderDetails.ToList());
+            return View(orderDetails.ToList());  // ToList() now works after adding the using statement
         }
 
         // GET: OrderDetails/Details/5
@@ -28,42 +28,54 @@ namespace test03.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OrderDetails orderDetails = db.OrderDetails.Find(id);
-            if (orderDetails == null)
+
+            // Fetch the Order by OrderID, including OrderDetails and related MenuItems
+            var order = db.Orders.Include(o => o.OrderDetails.Select(od => od.MenuItems))  // Include related MenuItems for OrderDetails
+                                 .FirstOrDefault(o => o.OrderID == id);
+
+            if (order == null)
             {
                 return HttpNotFound();
             }
-            return View(orderDetails);
+
+            return View(order);  // Pass the Order model to the view
         }
 
-        // GET: OrderDetails/Create
-        public ActionResult Create()
-        {
-            // Populate the dropdown for OrderID with "Order #OrderID"
-            ViewBag.OrderID = new SelectList(db.Orders, "OrderID", "OrderID");  // Show OrderID as text
-            ViewBag.MenuItemID = new SelectList(db.MenuItems, "MenuItemID", "Name");
 
+        // GET: OrderDetails/Create for an existing Order
+        public ActionResult Create(int orderId)
+        {
+            ViewBag.OrderID = orderId; // Pass the OrderID to the view
+            ViewBag.MenuItemID = new SelectList(db.MenuItems, "MenuItemID", "Name");
             return View();
         }
 
-
-        // POST: OrderDetails/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: OrderDetails/Create for an existing Order
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "OrderDetailID,OrderID,MenuItemID,Quantity,SubTotal")] OrderDetails orderDetails)
+        public ActionResult Create(int orderId, List<int> menuItemIds, List<int> quantities)
         {
             if (ModelState.IsValid)
             {
-                db.OrderDetails.Add(orderDetails);
+                for (int i = 0; i < menuItemIds.Count; i++)
+                {
+                    var orderDetails = new OrderDetails
+                    {
+                        OrderID = orderId,
+                        MenuItemID = menuItemIds[i],
+                        Quantity = quantities[i],
+                        SubTotal = db.MenuItems.Where(m => m.MenuItemID == menuItemIds[i]).FirstOrDefault().Price * quantities[i]  // Where() works now
+                    };
+
+                    db.OrderDetails.Add(orderDetails);
+                }
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.MenuItemID = new SelectList(db.MenuItems, "MenuItemID", "Name", orderDetails.MenuItemID);
-            ViewBag.OrderID = new SelectList(db.Orders, "OrderID", "Status", orderDetails.OrderID);
-            return View(orderDetails);
+            // If validation fails, return to the view with the error.
+            return View();
         }
 
         // GET: OrderDetails/Edit/5
@@ -84,8 +96,6 @@ namespace test03.Controllers
         }
 
         // POST: OrderDetails/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "OrderDetailID,OrderID,MenuItemID,Quantity,SubTotal")] OrderDetails orderDetails)

@@ -6,15 +6,16 @@
 
 <h2>Create</h2>
 
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Orders</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <!-- ReservationID -->
         <div class="form-group">
             @Html.LabelFor(model => model.ReservationID, "ReservationID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -23,22 +24,43 @@
             </div>
         </div>
 
+        <!-- Menu Items Selection -->
+        <div class="form-group">
+            <label class="control-label col-md-2">Menu Items</label>
+            <div class="col-md-10">
+                <div id="menuItemsContainer">
+                    <div class="menu-item">
+                        <select name="SelectedMenuItems[0].MenuItemID" class="form-control" data-item="0">
+                            <option value="">Select Item</option>
+                            @foreach (var item in ViewBag.MenuItems as SelectList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <input type="number" name="SelectedMenuItems[0].Quantity" class="form-control" placeholder="Quantity" min="1" />
+                    </div>
+                </div>
+                <button type="button" id="addMoreItems" class="btn btn-default">Add More Items</button>
+            </div>
+        </div>
+
+        <!-- Total Amount (calculated automatically) -->
         <div class="form-group">
             @Html.LabelFor(model => model.TotalAmount, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
 
+        <!-- OrderDate (automatically set to current date) -->
         <div class="form-group">
             @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
 
+        <!-- Status -->
         <div class="form-group">
             @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -61,4 +83,28 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Ensure jQuery is included -->
+
+    <script>
+        $(document).ready(function () {
+            var itemIndex = 1;
+
+            // Add more menu items when the button is clicked
+            $("#addMoreItems").click(function () {
+                // Clone the first menu item container
+                var newItem = $(".menu-item:first").clone();
+
+                // Update the names of the select and input fields for the new item
+                newItem.find("select").attr("name", "orderDetails[" + itemIndex + "].MenuItemID");
+                newItem.find("input").attr("name", "orderDetails[" + itemIndex + "].Quantity");
+                newItem.find("select").val(""); // Clear the select value
+                newItem.find("input").val(""); // Clear the quantity input
+
+                // Append the new item to the container
+                $("#menuItemsContainer").append(newItem);
+
+                itemIndex++; // Increment itemIndex for the next item
+            });
+        });
+    </script>
 }

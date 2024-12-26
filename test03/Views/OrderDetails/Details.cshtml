@@ -1,50 +1,37 @@
-﻿@model test03.Models.OrderDetails
+﻿@model test03.Models.Orders
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Order Details";
 }
 
-<h2>Details</h2>
+<h2>Order #@Model.OrderID</h2>
+
+<p>
+    <strong>Status: </strong>@Model.Status
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Menu Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>SubTotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderDetails)
+        {
+            <tr>
+                <td>@item.MenuItems.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.MenuItems.Price</td>
+                <td>@item.SubTotal</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <div>
-    <h4>OrderDetails</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Quantity)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Quantity)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.SubTotal)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.SubTotal)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MenuItems.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MenuItems.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Orders.Status)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Orders.Status)
-        </dd>
-
-    </dl>
+    @Html.ActionLink("Add Items", "Create", new { orderId = Model.OrderID })
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.OrderDetailID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

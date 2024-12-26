@@ -6,15 +6,16 @@
 
 <h2>Create</h2>
 
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Payments</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <!-- OrderID Dropdown -->
         <div class="form-group">
             @Html.LabelFor(model => model.OrderID, "OrderID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -23,23 +24,31 @@
             </div>
         </div>
 
+        <!-- Total Amount (editable) -->
         <div class="form-group">
-            @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Amount, "Total Amount", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                <input type="text" id="totalAmount" class="form-control" name="Amount" />
             </div>
         </div>
 
+        <!-- Payment Method Dropdown -->
         <div class="form-group">
             @Html.LabelFor(model => model.PaymentMethod, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PaymentMethod, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownList("PaymentMethod", new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Cash", Value = "Cash" },
+                    new SelectListItem { Text = "Credit Card", Value = "CreditCard" },
+                    new SelectListItem { Text = "Debit Card", Value = "DebitCard" },
+                    new SelectListItem { Text = "Online Payment", Value = "Online" }
+                }, "Select Payment Method", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.PaymentMethod, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
+        <!-- Payment Date (automated) -->
+        <div class="form-group" style="display:none;">
             @Html.LabelFor(model => model.PaymentDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.PaymentDate, new { htmlAttributes = new { @class = "form-control" } })
@@ -47,6 +56,7 @@
             </div>
         </div>
 
+        <!-- Payment Status -->
         <div class="form-group">
             @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -66,7 +76,3 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
