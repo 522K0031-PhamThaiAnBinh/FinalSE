@@ -28,14 +28,38 @@ body {
     color: white; /* White text color */
 }
 .sidebar {
-    width: 200px;
-    background-color: rgba(52, 58, 64, 0.9); /* Darker sidebar with opacity */
+    width: 200px; /* Sidebar width */
+    background-color: #343a40; /* Dark background */
     color: white;
     padding: 20px;
-    height: 100vh;
-    position: fixed;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    height: 100vh; /* Full height */
+    position: fixed; /* Fixed position */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+    display: flex; /* Flexbox layout */
+    flex-direction: column; /* Arrange items vertically */
+    justify-content: space-between; /* Spread items evenly */
 }
+
+    .sidebar a {
+        flex-grow: 1; /* Makes each link take up equal space */
+        display: flex; /* Turns each link into a flex container */
+        align-items: center; /* Vertically centers the text within the link */
+        justify-content: center; /* Horizontally centers the text */
+        font-size: 18px; /* Adjust font size to make text bigger */
+        font-weight: bold; /* Makes the text stand out more */
+        color: white;
+        text-decoration: none;
+        padding: 10px; /* Padding inside links */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s;
+    }
+
+        .sidebar a:hover {
+            background-color: #495057; /* Hover effect */
+            font-size: 20px; /* Optional: slightly increase font size on hover for emphasis */
+        }
+
+
 
 .content {
     margin-left: 220px;
