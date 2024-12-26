@@ -26,6 +26,7 @@ namespace test03.Models
         public decimal Price { get; set; }
         public string Category { get; set; }
         public Nullable<bool> IsAvailable { get; set; }
+        public string ImageFileName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetails> OrderDetails { get; set; }

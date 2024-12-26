@@ -6,15 +6,15 @@
 
 <h2>Edit</h2>
 
-
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "MenuItems", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>MenuItems</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         @Html.HiddenFor(model => model.MenuItemID)
 
         <div class="form-group">
@@ -56,6 +56,18 @@
                     @Html.EditorFor(model => model.IsAvailable)
                     @Html.ValidationMessageFor(model => model.IsAvailable, "", new { @class = "text-danger" })
                 </div>
+            </div>
+        </div>
+
+        <!-- Image Upload (optional) -->
+        <div class="form-group">
+            <label for="ImageFile" class="control-label col-md-2">Upload Image (Optional)</label>
+            <div class="col-md-10">
+                <input type="file" id="ImageFile" name="ImageFile" class="form-control" />
+                @if (!string.IsNullOrEmpty(Model.ImageFileName))
+                {
+                    <p>Current Image: <img src="@Url.Content("~/Images/MenuItems/" + Model.ImageFileName)" alt="Current Image" width="100" /></p>
+                }
             </div>
         </div>
 

@@ -26,32 +26,46 @@
         <th>
             @Html.DisplayNameFor(model => model.IsAvailable)
         </th>
+        <th>
+            Image
+        </th> <!-- New column for image -->
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Category)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsAvailable)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.MenuItemID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.MenuItemID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.MenuItemID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsAvailable)
+            </td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.ImageFileName))
+                {
+                    <img src="@Url.Content("~/Content/Images/MenuItems/" + item.ImageFileName)" alt="@item.Name" width="100" />
+                }
+                else
+                {
+                    <span>No Image</span>
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.MenuItemID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.MenuItemID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.MenuItemID })
+            </td>
+        </tr>
+    }
 
 </table>

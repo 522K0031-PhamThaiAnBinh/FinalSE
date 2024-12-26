@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -55,17 +56,36 @@ namespace test03.Controllers
         // POST: MenuItems/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MenuItemID,Name,Description,Price,Category,IsAvailable")] MenuItems menuItems)
+        public ActionResult Create(MenuItems menuItem, HttpPostedFileBase ImageFile)
         {
             if (ModelState.IsValid)
             {
-                db.MenuItems.Add(menuItems);
+                if (ImageFile != null && ImageFile.ContentLength > 0)
+                {
+                    // Ensure the directory exists
+                    string directoryPath = Server.MapPath("~/Content/Images/MenuItems");
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath); // Create directory if it doesn't exist
+                    }
+
+                    // Save the image to the directory and get the file name
+                    string fileName = Path.GetFileName(ImageFile.FileName);
+                    string path = Path.Combine(directoryPath, fileName);
+                    ImageFile.SaveAs(path);
+
+                    // Assign the image file name to the model
+                    menuItem.ImageFileName = fileName;
+                }
+
+                db.MenuItems.Add(menuItem);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(menuItems);
+            return View(menuItem);
         }
+
 
         // GET: MenuItems/Edit/5
         public ActionResult Edit(int? id)
@@ -85,16 +105,36 @@ namespace test03.Controllers
         // POST: MenuItems/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MenuItemID,Name,Description,Price,Category,IsAvailable")] MenuItems menuItems)
+        public ActionResult Edit(MenuItems menuItem, HttpPostedFileBase ImageFile)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(menuItems).State = EntityState.Modified;
+                if (ImageFile != null && ImageFile.ContentLength > 0)
+                {
+                    // Ensure the directory exists
+                    string directoryPath = Server.MapPath("~/Content/Images/MenuItems");
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath); // Create directory if it doesn't exist
+                    }
+
+                    // Save the image to the directory and get the file name
+                    string fileName = Path.GetFileName(ImageFile.FileName);
+                    string path = Path.Combine(directoryPath, fileName);
+                    ImageFile.SaveAs(path);
+
+                    // Update the image file name
+                    menuItem.ImageFileName = fileName;
+                }
+
+                db.Entry(menuItem).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(menuItems);
+
+            return View(menuItem);
         }
+
 
         // GET: MenuItems/Delete/5
         public ActionResult Delete(int? id)
