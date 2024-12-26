@@ -6,10 +6,22 @@
 
 <h2>Delete</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to delete this menu item?</h3>
+
 <div>
-    <h4>MenuItems</h4>
+    <h4>Menu Item Details</h4>
     <hr />
+
+    <!-- Display the image if available -->
+    @if (!string.IsNullOrEmpty(Model.ImageFileName))
+    {
+        <div>
+            <h5>Image:</h5>
+            <img src="@Url.Content("~/Images/MenuItems/" + Model.ImageFileName)" alt="Image of @Model.Name" style="width: 150px; height: auto;" />
+        </div>
+    }
+
+    <!-- Display the menu item details -->
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Name)
@@ -50,15 +62,16 @@
         <dd>
             @Html.DisplayFor(model => model.IsAvailable)
         </dd>
-
     </dl>
 
-    @using (Html.BeginForm()) {
+    <!-- Delete confirmation form -->
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Delete Item" class="btn btn-danger" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-secondary" })
         </div>
     }
 </div>

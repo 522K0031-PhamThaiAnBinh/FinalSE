@@ -22,13 +22,13 @@
                             @Html.DropDownList("CustomerID", null, "Select Customer", htmlAttributes: new { @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.CustomerID, "", new { @class = "text-danger" })
                         </div>
-
                         <!-- Reservation Date -->
                         <div class="form-group">
                             @Html.LabelFor(model => model.ReservationDate, "Reservation Date", htmlAttributes: new { @class = "form-label" })
-                            @Html.EditorFor(model => model.ReservationDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                            @Html.EditorFor(model => model.ReservationDate, new { htmlAttributes = new { @class = "form-control", type = "date", min = DateTime.Today.ToString("yyyy-MM-dd") } })
                             @Html.ValidationMessageFor(model => model.ReservationDate, "", new { @class = "text-danger" })
                         </div>
+
 
                         <!-- Reservation Time -->
                         <div class="form-group">

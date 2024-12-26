@@ -44,14 +44,31 @@ namespace test03.Controllers
         }
 
         // POST: Reservations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CustomerID,ReservationDate,ReservationTime,NumberOfGuests,TableNumber,Status,SpecialInstructions")] Reservations reservation)
         {
             if (ModelState.IsValid)
             {
+                // Check if the reservation date is in the past
+                if (reservation.ReservationDate < DateTime.Today)
+                {
+                    ModelState.AddModelError("ReservationDate", "Reservation date must be in the future.");
+                    ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FullName", reservation.CustomerID);
+                    return View(reservation);
+                }
+
+                // Check for existing reservations at the same date, time, and table
+                var existingReservation = db.Reservations
+                    .FirstOrDefault(r => r.ReservationDate == reservation.ReservationDate && r.ReservationTime == reservation.ReservationTime && r.TableNumber == reservation.TableNumber);
+
+                if (existingReservation != null)
+                {
+                    ModelState.AddModelError("TableNumber", "This table is already reserved at the selected time.");
+                    ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FullName", reservation.CustomerID);
+                    return View(reservation);
+                }
+
                 // Set the CreatedAt field to the current date and time
                 reservation.CreatedAt = DateTime.Now;
 
@@ -63,6 +80,7 @@ namespace test03.Controllers
             ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FullName", reservation.CustomerID);
             return View(reservation);
         }
+
 
 
         // GET: Reservations/Edit/5
