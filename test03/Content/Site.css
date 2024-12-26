@@ -18,3 +18,28 @@ select,
 textarea {
     max-width: 280px;
 }
+body {
+    color: var(--text-color);
+    text-shadow: var(--text-shadow);
+    background-image: url('/Content/Images/pexels-chanwalrus-941861.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white; /* White text color */
+}
+.sidebar {
+    width: 200px;
+    background-color: rgba(52, 58, 64, 0.9); /* Darker sidebar with opacity */
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.content {
+    margin-left: 220px;
+    padding: 20px;
+    flex-grow: 1;
+    background-color: rgba(255, 255, 255, 0.7); /* Light semi-transparent background */
+}
